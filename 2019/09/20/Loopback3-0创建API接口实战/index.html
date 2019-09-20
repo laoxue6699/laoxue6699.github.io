@@ -55,19 +55,19 @@
   };
 </script>
 
-  <meta name="description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，您可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
+  <meta name="description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Loopback3.0创建API接口实战">
 <meta property="og:url" content="http://laoxue6699.github.io/2019/09/20/Loopback3-0创建API接口实战/index.html">
 <meta property="og:site_name" content="老学的开发笔记">
-<meta property="og:description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，您可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
+<meta property="og:description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%882.14.34.png">
 <meta property="og:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%883.25.55.png">
-<meta property="og:updated_time" content="2019-09-20T09:25:38.138Z">
+<meta property="og:updated_time" content="2019-09-20T09:53:25.043Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Loopback3.0创建API接口实战">
-<meta name="twitter:description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，您可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
+<meta name="twitter:description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
 <meta name="twitter:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%882.14.34.png">
   <link rel="canonical" href="http://laoxue6699.github.io/2019/09/20/Loopback3-0创建API接口实战/">
 
@@ -264,7 +264,7 @@
                 
               
 
-              <time title="创建时间：2019-09-20 13:23:35 / 修改时间：17:25:38" itemprop="dateCreated datePublished" datetime="2019-09-20T13:23:35+08:00">2019-09-20</time>
+              <time title="创建时间：2019-09-20 13:23:35 / 修改时间：17:53:25" itemprop="dateCreated datePublished" datetime="2019-09-20T13:23:35+08:00">2019-09-20</time>
             </span>
           
             
@@ -284,7 +284,7 @@
 
       
         <h2 id="一、项目概述"><a href="#一、项目概述" class="headerlink" title="一、项目概述"></a>一、项目概述</h2><p>这是官方给出的一个关于咖啡店点评的示例。</p>
-<p>咖啡店点评是一个网站，您可以用来发布咖啡店的评论。有三个数据模型：</p>
+<p>咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：</p>
 <ul>
 <li>CoffeeShop 咖啡店</li>
 <li>Review 评论</li>
@@ -430,6 +430,29 @@
 <h2 id="六、定义操作权限"><a href="#六、定义操作权限" class="headerlink" title="六、定义操作权限"></a>六、定义操作权限</h2><p>loopback 应用通过模型访问数据，因此控制对数据的访问意味着对模型进行权限的控制：也就是说，指定什么角色可以在模型上执行读取和写入数据的方法。loopback 权限控制由权限控制列表或 ACL 决定。</p>
 <p>根据项目需求，权限控制应执行以下规则：</p>
 <p>任何人都可以阅读评论。但是创建、编辑和删除的操作必须在登录之后才有权限。<br>任何人都可以注册为用户，可以登录和登出。<br>登录用户可以创建新的评论，编辑或删除自己的评论。然而，他们不能修改咖啡店的评论。</p>
+<p>首先，拒绝所有人操作所有接口，这通常是定义 ACL 的起点，因为您可以选择性地允许特定操作的访问。</p>
+<p>现在允许所有人对 reviews 进行读操作。</p>
+<p>允许通过身份验证的用户对 coffeeshops 进行读操作，也就是说，已登录的用户可以浏览所有咖啡店。</p>
+<p>允许经过身份验证的用户对 reviews 进行创建操作，也就是说，已登录的用户可以添加一条评论。</p>
+<p>使 review 的作者有权限（其“所有者”）对其进行任何更改。</p>
+<h2 id="七、自动填充字段内容"><a href="#七、自动填充字段内容" class="headerlink" title="七、自动填充字段内容"></a>七、自动填充字段内容</h2><p>我们需要用户在添加评论时，自动填充日期字段的内容为当前的日期。同时，由于评论和评论者之间是通过<code>publisherId</code>这个外键进行关联的，用户在添加评论时，需要将评论者的用户 Id 作为其内容进行填充。</p>
+<p>我们将定义一个远程钩子，每当在 Review 模型上调用 create()方法时（在创建新的评论时），它将被调用。</p>
+<p>通常，我们可以定义两种远程钩子：</p>
+<ul>
+<li><code>beforeRemote()</code>在远程方法之前运行。</li>
+<li><code>afterRemote()</code>在远程方法之后运行。</li>
+</ul>
+<p>在这两种情况下，有两个参数可以供我们使用：一个与要钩子函数的远程方法匹配的字符串，和一个回调函数。</p>
+<h3 id="创建一个远程钩子"><a href="#创建一个远程钩子" class="headerlink" title="创建一个远程钩子"></a>创建一个远程钩子</h3><p>这里，我们将在 review 模型中定义一个远程钩子，具体来说是 Review.beforeRemote。</p>
+<ul>
+<li>设置 publisherId 为请求中的 userId</li>
+<li>设置日期为当前日期。</li>
+</ul>
+<p>修改 common/models/review.js：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports = function(Review) &#123;</span><br><span class="line">  Review.beforeRemote(&apos;create&apos;, function(context, user, next) &#123;</span><br><span class="line">    context.args.data.date = Date.now();</span><br><span class="line">    context.args.data.publisherId = context.req.accessToken.userId;</span><br><span class="line">    next();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>在创建 Review 模型的新实例之前调用此函数。</p>
+<h2 id="八、后台管理"><a href="#八、后台管理" class="headerlink" title="八、后台管理"></a>八、后台管理</h2><p>如何对 coffeeshops 的数据进行管理呢？这是我们常说的后台管理，需要一个管理员<code>admin</code>的角色来承担。</p>
 
     </div>
 
@@ -578,7 +601,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、项目概述"><span class="nav-number">1.</span> <span class="nav-text">一、项目概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、创建项目"><span class="nav-number">2.</span> <span class="nav-text">二、创建项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Loopback-CLI-工具"><span class="nav-number">2.1.</span> <span class="nav-text">安装 Loopback CLI 工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-LoopBack-项目"><span class="nav-number">2.2.</span> <span class="nav-text">创建 LoopBack 项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、连接数据源"><span class="nav-number">3.</span> <span class="nav-text">三、连接数据源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、创建模型"><span class="nav-number">4.</span> <span class="nav-text">四、创建模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CoffeeShop-模型"><span class="nav-number">4.1.</span> <span class="nav-text">CoffeeShop 模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#review-模型"><span class="nav-number">4.2.</span> <span class="nav-text">review 模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reviewer-模型"><span class="nav-number">4.3.</span> <span class="nav-text">reviewer 模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、定义模型之间的关系"><span class="nav-number">5.</span> <span class="nav-text">五、定义模型之间的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、定义操作权限"><span class="nav-number">6.</span> <span class="nav-text">六、定义操作权限</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、项目概述"><span class="nav-number">1.</span> <span class="nav-text">一、项目概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、创建项目"><span class="nav-number">2.</span> <span class="nav-text">二、创建项目</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Loopback-CLI-工具"><span class="nav-number">2.1.</span> <span class="nav-text">安装 Loopback CLI 工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建-LoopBack-项目"><span class="nav-number">2.2.</span> <span class="nav-text">创建 LoopBack 项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、连接数据源"><span class="nav-number">3.</span> <span class="nav-text">三、连接数据源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、创建模型"><span class="nav-number">4.</span> <span class="nav-text">四、创建模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CoffeeShop-模型"><span class="nav-number">4.1.</span> <span class="nav-text">CoffeeShop 模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#review-模型"><span class="nav-number">4.2.</span> <span class="nav-text">review 模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reviewer-模型"><span class="nav-number">4.3.</span> <span class="nav-text">reviewer 模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、定义模型之间的关系"><span class="nav-number">5.</span> <span class="nav-text">五、定义模型之间的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、定义操作权限"><span class="nav-number">6.</span> <span class="nav-text">六、定义操作权限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、自动填充字段内容"><span class="nav-number">7.</span> <span class="nav-text">七、自动填充字段内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个远程钩子"><span class="nav-number">7.1.</span> <span class="nav-text">创建一个远程钩子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、后台管理"><span class="nav-number">8.</span> <span class="nav-text">八、后台管理</span></a></li></ol></div>
             
 
           </div>
