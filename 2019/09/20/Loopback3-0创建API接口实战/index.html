@@ -58,16 +58,16 @@
   <meta name="description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
 <meta name="keywords" content="loopBack,nodejs,express,RESTful">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Loopback3.0创建API接口实战">
+<meta property="og:title" content="LoopBack3.0创建API接口实战">
 <meta property="og:url" content="http://laoxue6699.github.io/2019/09/20/Loopback3-0创建API接口实战/index.html">
 <meta property="og:site_name" content="老学的开发笔记">
 <meta property="og:description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%882.14.34.png">
 <meta property="og:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%883.25.55.png">
-<meta property="og:updated_time" content="2019-09-22T01:06:57.469Z">
+<meta property="og:updated_time" content="2019-09-22T09:39:22.226Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Loopback3.0创建API接口实战">
+<meta name="twitter:title" content="LoopBack3.0创建API接口实战">
 <meta name="twitter:description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
 <meta name="twitter:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%882.14.34.png">
   <link rel="canonical" href="http://laoxue6699.github.io/2019/09/20/Loopback3-0创建API接口实战/">
@@ -84,7 +84,7 @@
   };
 </script>
 
-  <title>Loopback3.0创建API接口实战 | 老学的开发笔记</title>
+  <title>LoopBack3.0创建API接口实战 | 老学的开发笔记</title>
   
 
 
@@ -248,7 +248,7 @@
       <header class="post-header">
 
         
-          <h1 class="post-title" itemprop="name headline">Loopback3.0创建API接口实战
+          <h1 class="post-title" itemprop="name headline">LoopBack3.0创建API接口实战
 
             
           </h1>
@@ -276,7 +276,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-22 09:06:57" itemprop="dateModified" datetime="2019-09-22T09:06:57+08:00">2019-09-22</time>
+                <time title="修改时间：2019-09-22 17:39:22" itemprop="dateModified" datetime="2019-09-22T17:39:22+08:00">2019-09-22</time>
               </span>
             
           
@@ -316,11 +316,11 @@
 
 <p>它们有如下关系：</p>
 <ul>
-<li>一个 CoffeeShop 拥有多个 review</li>
-<li>一个 CoffeeShop 拥有多个 reviewer</li>
-<li>一个 review 属于一个 CoffeeShop</li>
-<li>一个 review 属于一个 reviewer</li>
-<li>一个 reviewer 拥有多个 review</li>
+<li>CoffeeShop 拥有多个 review</li>
+<li>CoffeeShop 拥有多个 reviewer</li>
+<li>review 属于一个 CoffeeShop</li>
+<li>review 属于一个 reviewer</li>
+<li>reviewer 拥有多个 review</li>
 </ul>
 <p>一般来说，用户可以创建，编辑，删除和阅读咖啡店的评论，并通过 ACLs 指定基本规则和权限：</p>
 <ul>
@@ -481,7 +481,7 @@
 <li>设置日期为当前日期。</li>
 </ul>
 <p>修改 common/models/review.js：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports = function(Review) &#123;</span><br><span class="line">  Review.beforeRemote(&apos;create&apos;, function(context, user, next) &#123;</span><br><span class="line">    context.args.data.date = Date.now();</span><br><span class="line">    context.args.data.publisherId = context.req.accessToken.userId;</span><br><span class="line">    next();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">module.exports = function(Review) &#123;</span><br><span class="line">  Review.beforeRemote(&apos;create&apos;, function(context, user, next) &#123;</span><br><span class="line">    context.args.data.date = Date.now().toLocalString(); //转换成本地时间</span><br><span class="line">    context.args.data.publisherId = context.req.accessToken.userId;</span><br><span class="line">    next();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>在创建 Review 模型的新实例之前调用此函数。</p>
 <h2 id="八、后台管理"><a href="#八、后台管理" class="headerlink" title="八、后台管理"></a>八、后台管理</h2><p>如何对 coffeeshops 的数据进行管理呢？这是我们常说的后台管理，需要一个管理员<code>admin</code>的角色来承担。<br>这部分内容将通过另外一篇文章进行介绍。</p>
@@ -525,6 +525,10 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/22/LoopBack3-0自定义角色与授权/" rel="prev" title="LoopBack3.0自定义角色与授权">
+                  LoopBack3.0自定义角色与授权 <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -581,7 +585,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
