@@ -55,20 +55,20 @@
   };
 </script>
 
-  <meta name="description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
+  <meta name="description" content="LoopBack 是一个高度可扩展的开源 Node.js 框架，它使您能够以很少的编码或不编写任何代码来创建动态的端到端 REST API。    到 bilibili.com 网站观看全部视频">
 <meta name="keywords" content="loopBack,nodejs,express,RESTful">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LoopBack3.0创建API接口实战">
 <meta property="og:url" content="http://laoxue6699.github.io/2019/09/20/Loopback3-0创建API接口实战/index.html">
 <meta property="og:site_name" content="老学的开发笔记">
-<meta property="og:description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
+<meta property="og:description" content="LoopBack 是一个高度可扩展的开源 Node.js 框架，它使您能够以很少的编码或不编写任何代码来创建动态的端到端 REST API。    到 bilibili.com 网站观看全部视频">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%882.14.34.png">
 <meta property="og:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%883.25.55.png">
-<meta property="og:updated_time" content="2019-09-22T09:39:22.226Z">
+<meta property="og:updated_time" content="2019-09-24T22:15:02.267Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LoopBack3.0创建API接口实战">
-<meta name="twitter:description" content="一、项目概述这是官方给出的一个关于咖啡店点评的示例。 咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：  CoffeeShop 咖啡店 Review 评论 Reviewer 评论者">
+<meta name="twitter:description" content="LoopBack 是一个高度可扩展的开源 Node.js 框架，它使您能够以很少的编码或不编写任何代码来创建动态的端到端 REST API。    到 bilibili.com 网站观看全部视频">
 <meta name="twitter:image" content="http://py49qhmgp.bkt.clouddn.com/%E6%88%AA%E5%B1%8F2019-09-20%E4%B8%8B%E5%8D%882.14.34.png">
   <link rel="canonical" href="http://laoxue6699.github.io/2019/09/20/Loopback3-0创建API接口实战/">
 
@@ -276,7 +276,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-09-22 17:39:22" itemprop="dateModified" datetime="2019-09-22T17:39:22+08:00">2019-09-22</time>
+                <time title="修改时间：2019-09-25 06:15:02" itemprop="dateModified" datetime="2019-09-25T06:15:02+08:00">2019-09-25</time>
               </span>
             
           
@@ -305,15 +305,26 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="一、项目概述"><a href="#一、项目概述" class="headerlink" title="一、项目概述"></a>一、项目概述</h2><p>这是官方给出的一个关于咖啡店点评的示例。</p>
+        <p>LoopBack 是一个高度可扩展的开源 Node.js 框架，它使您能够以很少的编码或不编写任何代码来创建动态的端到端 REST API。</p>
+<iframe src="//player.bilibili.com/player.html?aid=68852902&cid=119328164&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" height="300" width="500"> </iframe>
+
+<p><a href="https://www.bilibili.com/video/av68852902/" target="_blank" rel="noopener">到 bilibili.com 网站观看全部视频</a></p>
+<a id="more"></a>
+
+<p>LoopBack 框架是由一组 Node.js 的模块构成的。你可以单独使用这些模块或把它们组合在一起使用。 应用通过 LoopBack model API 可以使用以下三种方式访问数据。</p>
+<ul>
+<li>将模型作为一个标准的 Node 对象使用</li>
+<li>通过 HTTP REST API 调用</li>
+<li>通过封装好的 API SDK，包括 iOS, Android 和 Angular</li>
+</ul>
+<p>应用程序通过 LoopBack model API 用以上三种方式查询数据，储存数据，上传文件，发送 email, 推送消息，注册/登陆用户等远程或本地的服务。用户也可以通过 Strong Remoting 将后端的 API 通过 REST, WebSocket(或其他传输协议)供客户端调用。</p>
+<h2 id="一、项目概述"><a href="#一、项目概述" class="headerlink" title="一、项目概述"></a>一、项目概述</h2><p>这是官方给出的一个关于咖啡店点评的示例。</p>
 <p>咖啡店点评是一个网站，我们可以用来发布咖啡店的评论。有三个数据模型：</p>
 <ul>
 <li>CoffeeShop 咖啡店</li>
 <li>Review 评论</li>
 <li>Reviewer 评论者</li>
 </ul>
-<a id="more"></a>
-
 <p>它们有如下关系：</p>
 <ul>
 <li>CoffeeShop 拥有多个 review</li>
