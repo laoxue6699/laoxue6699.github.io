@@ -64,7 +64,7 @@
 <meta property="og:description" content="本文介绍用 Docker 安装 Drupal8 运行环境的实现方法 一、关于 DockerDocker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的 Linux 或 Windows 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。 百度百科关于 Docker">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-10-01%E4%B8%8A%E5%8D%8810.16.19.png">
-<meta property="og:updated_time" content="2019-10-01T02:23:04.436Z">
+<meta property="og:updated_time" content="2019-10-01T02:53:59.934Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="三步搞定用Docker安装Drupal8运行环境">
 <meta name="twitter:description" content="本文介绍用 Docker 安装 Drupal8 运行环境的实现方法 一、关于 DockerDocker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的镜像中，然后发布到任何流行的 Linux 或 Windows 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。 百度百科关于 Docker">
@@ -264,7 +264,7 @@
                 
               
 
-              <time title="创建时间：2019-10-01 09:27:54 / 修改时间：10:23:04" itemprop="dateCreated datePublished" datetime="2019-10-01T09:27:54+08:00">2019-10-01</time>
+              <time title="创建时间：2019-10-01 09:27:54 / 修改时间：10:53:59" itemprop="dateCreated datePublished" datetime="2019-10-01T09:27:54+08:00">2019-10-01</time>
             </span>
           
             
@@ -307,8 +307,7 @@
 <p>虚拟主机必须配置包含 AllowOverride All，允许 drupal 的.htaccess 文件起作用。</p>
 <h3 id="Database"><a href="#Database" class="headerlink" title="Database"></a>Database</h3><p>MySQL 5.5.3/MariaDB 5.5.20/Percona Server 5.5.8 or higher with PDO and an InnoDB-compatible primary storage engine,</p>
 <p>PostgreSQL 9.1.2 or higher with PDO,</p>
-<h3 id="SQLite-3-6-8-or-higher"><a href="#SQLite-3-6-8-or-higher" class="headerlink" title="SQLite 3.6.8 or higher"></a>SQLite 3.6.8 or higher</h3><p>PS：我最开始用的以前的 mysql5.1 安装 Drupal8，报错：SQLSTATE[42000]: Syntax error or access violation: 1115 Unknown character set: ‘#utf8mb4’#。</p>
-<h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><p>Drupal 8: PHP 5.5.9 or higher</p>
+<h3 id="SQLite-3-6-8-or-higher"><a href="#SQLite-3-6-8-or-higher" class="headerlink" title="SQLite 3.6.8 or higher"></a>SQLite 3.6.8 or higher</h3><h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><p>Drupal 8: PHP 5.5.9 or higher</p>
 <h2 id="三步搞定"><a href="#三步搞定" class="headerlink" title="三步搞定"></a>三步搞定</h2><p>看到配置环境，很多初学者会望而却步。正是得益于 Docker 的镜像和容器技术，可以让我们省去配置环境的麻烦。而且，这个环境可以和上线环境一模一样，省去了我们部署和维护的烦恼。</p>
 <p>用 Docker 安装 Drupal8 运行环境只要三步，需要安装两个容器，前提是我们已经安装了 Docker。</p>
 <h3 id="第一步-安装数据库"><a href="#第一步-安装数据库" class="headerlink" title="第一步 安装数据库"></a>第一步 安装数据库</h3><p>在命令行输入以下命令：</p>
