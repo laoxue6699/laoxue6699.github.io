@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="原文地址：https://www.thepolyglotdeveloper.com/2019/02/using-hapijs-mongoose-mongodb-build-rest-api/ 在本教程中，我们将使用Hapi.js，Joi和Mongoose作为后端框架以及MongoDB作为NoSQL数据库来开发一个简单的RESTful API 。通过简化功能并验证客户端提供的数据。">
+<meta name="keywords" content="Nodejs,Hapi.js,MongoDB,REST-API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Hapi.js，Mongoose和MongoDB构建REST API">
+<meta property="og:url" content="http://laoxue6699.github.io/2019/11/11/使用Hapi-js，Mongoose和MongoDB构建REST-API/index.html">
+<meta property="og:site_name" content="老学的开发笔记">
+<meta property="og:description" content="原文地址：https://www.thepolyglotdeveloper.com/2019/02/using-hapijs-mongoose-mongodb-build-rest-api/ 在本教程中，我们将使用Hapi.js，Joi和Mongoose作为后端框架以及MongoDB作为NoSQL数据库来开发一个简单的RESTful API 。通过简化功能并验证客户端提供的数据。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-11T13:09:17.272Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Hapi.js，Mongoose和MongoDB构建REST API">
+<meta name="twitter:description" content="原文地址：https://www.thepolyglotdeveloper.com/2019/02/using-hapijs-mongoose-mongodb-build-rest-api/ 在本教程中，我们将使用Hapi.js，Joi和Mongoose作为后端框架以及MongoDB作为NoSQL数据库来开发一个简单的RESTful API 。通过简化功能并验证客户端提供的数据。">
+  <link rel="canonical" href="http://laoxue6699.github.io/2019/11/11/使用Hapi-js，Mongoose和MongoDB构建REST-API/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>使用Hapi.js，Mongoose和MongoDB构建REST API | 老学的开发笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老学的开发笔记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">专注前端 兼顾全栈</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>笔记列表</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>按时间归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>笔记分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>技术标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>自我介绍</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://laoxue6699.github.io/2019/11/11/使用Hapi-js，Mongoose和MongoDB构建REST-API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老学">
+      <meta itemprop="description" content="好记性不如烂笔头">
+      <meta itemprop="image" content="/images/laoxue.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老学的开发笔记">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">使用Hapi.js，Mongoose和MongoDB构建REST API
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-11 20:22:54 / 修改时间：21:09:17" itemprop="dateCreated datePublished" datetime="2019-11-11T20:22:54+08:00">2019-11-11</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/翻译/" itemprop="url" rel="index"><span itemprop="name">翻译</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><a href="https://www.thepolyglotdeveloper.com/2019/02/using-hapijs-mongoose-mongodb-build-rest-api/" target="_blank" rel="noopener">原文地址：https://www.thepolyglotdeveloper.com/2019/02/using-hapijs-mongoose-mongodb-build-rest-api/</a></p>
+<p>在本教程中，我们将使用Hapi.js，Joi和Mongoose作为后端框架以及MongoDB作为NoSQL数据库来开发一个简单的RESTful API 。通过简化功能并验证客户端提供的数据。</p>
+<a id="more"></a>
+
+<h2 id="创建Hapi-js项目"><a href="#创建Hapi-js项目" class="headerlink" title="创建Hapi.js项目"></a>创建Hapi.js项目</h2><p>创建一个新的项目目录并执行以下命令，并安装支持数据验证的joi和连接mongoDB数据库的mongoose依赖模块：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm init -y</span><br><span class="line">npm install hapi joi mongoose --save</span><br></pre></td></tr></table></figure>
+
+<p>上面的命令将创建一个新的package.json文件，并安装Hapi.js框架，Joi验证框架和Mongoose对象文档建模器（ODM）。</p>
+<p>我们将所有应用程序代码添加到单个项目文件中。创建一个app.js文件，包含以下JavaScript代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">const Hapi = require(&quot;hapi&quot;);</span><br><span class="line">const Mongoose = require(&quot;mongoose&quot;);</span><br><span class="line">const Joi = require(&quot;joi&quot;);</span><br><span class="line"></span><br><span class="line">const server = new Hapi.Server(&#123; &quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 3000 &#125;);</span><br><span class="line"></span><br><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;POST&quot;,</span><br><span class="line">    path: &quot;/person&quot;,</span><br><span class="line">    options: &#123;</span><br><span class="line">        validate: &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;GET&quot;,</span><br><span class="line">    path: &quot;/people&quot;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;GET&quot;,</span><br><span class="line">    path: &quot;/person/&#123;id&#125;&quot;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;PUT&quot;,</span><br><span class="line">    path: &quot;/person/&#123;id&#125;&quot;,</span><br><span class="line">    options: &#123;</span><br><span class="line">        validate: &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;DELETE&quot;,</span><br><span class="line">    path: &quot;/person/&#123;id&#125;&quot;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;&#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.start();</span><br></pre></td></tr></table></figure>
+
+<p>我们已经在app.js文件中添加了很多代码。实质上，我们已经导入了下载的依赖项，定义了服务器设置，定义了也称为接口的路由，并启动了服务器。</p>
+<p>您会注意到，并非我们的所有路由都是一样的。我们正在开发基于创建，检索，更新和删除（CRUD）的REST API，并在一些接口上进行了验证。特别是，我们将向接口添加验证逻辑，以将数据保存到数据库，而不是检索或删除。</p>
+<p>接下来，让我们看一下如何配置MongoDB并添加我们的接口逻辑。</p>
+<h2 id="使用Mongoose-ODM与数据库进行交互"><a href="#使用Mongoose-ODM与数据库进行交互" class="headerlink" title="使用Mongoose ODM与数据库进行交互"></a>使用Mongoose ODM与数据库进行交互</h2><p>记住，我假设您已经可以访问MongoDB实例。在定义服务器配置之后，在app.js文件的顶部，我们需要连接到MongoDB。插入以下行以建立连接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mongoose.connect(&quot;mongodb://localhost/thepolyglotdeveloper&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>您需要将连接字符串信息换成您自己的连接字符串信息。在使用Mongoose时，我们需要为每个集合定义一个模型。由于这是一个简单的示例，因此我们只有一个模型，它看起来如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const PersonModel = Mongoose.model(&quot;person&quot;, &#123;</span><br><span class="line">    firstname: String,</span><br><span class="line">    lastname: String</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>我们的每个文档都包含一个<code>firstname</code>和一个<code>lastname</code>，但是两个字段都不是必需的。这些文档将保存到<code>people ODM</code>模型的复数形式的集合中。</p>
+<p>此时，可以使用MongoDB了。</p>
+<p>现在是时候开始开发我们的API接口了，因此从创建接口开始，我们可能会有类似这样的内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;POST&quot;,</span><br><span class="line">    path: &quot;/person&quot;,</span><br><span class="line">    options: &#123;</span><br><span class="line">        validate: &#123;&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            var person = new PersonModel(request.payload);</span><br><span class="line">            var result = await person.save();</span><br><span class="line">            return h.response(result);</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            return h.response(error).code(500);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>我们现在已经跳过了验证逻辑，但是在我们内部，<code>handler</code>我们将接收与客户端请求一起发送的有效负载数据，并创建模型的新实例。使用我们的模型，我们可以保存到数据库并将响应返回给客户端。mongoose将基于<code>schema</code>对有效负载数据进行基本验证，但我们可以做得更好。这是在Hapi.js中安装Joi模块的原因。</p>
+<p>让我们看一下validate路线中的对象:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">validate: &#123;</span><br><span class="line">    payload: &#123;</span><br><span class="line">        firstname: Joi.string().required(),</span><br><span class="line">        lastname: Joi.string().required()</span><br><span class="line">    &#125;,</span><br><span class="line">    failAction: (request, h, error) =&gt; &#123;</span><br><span class="line">        return error.isJoi ? h.response(error.details[0]).takeover() : h.response(error).takeover();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>validate</code>对象中，我们选择验证<code>payload</code>。我们还可以选择验证请求的<code>params</code>以及<code>query</code>，但此处都不需要。尽管我们可以执行一些非常复杂的验证，但我们只是在验证两个属性是否都存在。我们不会使用缺失的错误返回给用户一个模糊的错误，而是使用<code>failActionwhich</code>是可选的来返回确切的错误。</p>
+<p>现在，让我们看一下如何检索已创建的数据。在典型的CRUD方案中，我们可以检索所有数据或特定数据。我们将适应两种情况。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;GET&quot;,</span><br><span class="line">    path: &quot;/people&quot;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            var person = await PersonModel.find().exec();</span><br><span class="line">            return h.response(person);</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            return h.response(error).code(500);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>上面的路由将find在Mongoose中执行该函数，而无需任何查询参数。这意味着没有条件可搜索从集合返回所有数据的结果。同样，我们可以返回特定的数据。</p>
+<p>如果要返回特定的数据，可以在find函数中提供参数，也可以使用以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;GET&quot;,</span><br><span class="line">    path: &quot;/person/&#123;id&#125;&quot;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            var person = await PersonModel.findById(request.params.id).exec();</span><br><span class="line">            return h.response(person);</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            return h.response(error).code(500);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在上述接口中，我们接受<code>id</code>路由参数并正在使用该<code>findById</code>函数。从交互返回的数据将返回给面向客户端的应用程序。</p>
+<p>随着创建和检索接口的完成，我们可以以更新和删除接口结束本教程。从更新终结点开始，我们可能会有类似以下内容:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;PUT&quot;,</span><br><span class="line">    path: &quot;/person/&#123;id&#125;&quot;,</span><br><span class="line">    options: &#123;</span><br><span class="line">        validate: &#123;</span><br><span class="line">            payload: &#123;</span><br><span class="line">                firstname: Joi.string().optional(),</span><br><span class="line">                lastname: Joi.string().optional()</span><br><span class="line">            &#125;,</span><br><span class="line">            failAction: (request, h, error) =&gt; &#123;</span><br><span class="line">                return error.isJoi ? h.response(error.details[0]).takeover() : h.response(error).takeover();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            var result = await PersonModel.findByIdAndUpdate(request.params.id, request.payload, &#123; new: true &#125;);</span><br><span class="line">            return h.response(result);</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            return h.response(error).code(500);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>就像创建接口一样，我们正在验证数据。但是，我们的验证与先前的接口有点不同。并不是说我们的属性是必需的，我们只是说它们是可选的。当我们执行此操作时，显示的任何不在验证器中的属性都将引发错误。因此，例如，如果我想包含一个中间名，它将失败。</p>
+<p>在<code>handler</code>函数内部，我们可以使用称为的快捷函数<code>findByIdAndUpdate</code>，该函数使我们能够找到文档以相同的操作进行更新和更新，而不是分两步进行。我们包括<code>new</code>设置，以便可以将最新的文档信息返回给客户端。</p>
+<p>删除接口将简单得多：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server.route(&#123;</span><br><span class="line">    method: &quot;DELETE&quot;,</span><br><span class="line">    path: &quot;/person/&#123;id&#125;&quot;,</span><br><span class="line">    handler: async (request, h) =&gt; &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            var result = await PersonModel.findByIdAndDelete(request.params.id);</span><br><span class="line">            return h.response(result);</span><br><span class="line">        &#125; catch (error) &#123;</span><br><span class="line">            return h.response(error).code(500);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>id</code>从客户端传递的参数，我们可以执行<code>findByIdAndDelete</code>函数，该函数将通过<code>id</code>查找文档，然后一举删除它，而不用分两步进行。</p>
+<p>到目前为止，您应该已经可以使用该API。在尝试与Angular或Vue.js之类的前端框架一起使用之前，您可能想要使用Postman之类的工具进行接口调试。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Nodejs/" rel="tag"># Nodejs</a>
+            
+              <a href="/tags/Hapi-js/" rel="tag"># Hapi.js</a>
+            
+              <a href="/tags/MongoDB/" rel="tag"># MongoDB</a>
+            
+              <a href="/tags/REST-API/" rel="tag"># REST-API</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/01/三步搞定用Docker安装Drupal8运行环境/" rel="next" title="三步搞定用Docker安装Drupal8运行环境">
+                  <i class="fa fa-chevron-left"></i> 三步搞定用Docker安装Drupal8运行环境
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/laoxue.png"
+      alt="老学">
+  <p class="site-author-name" itemprop="name">老学</p>
+  <div class="site-description motion-element" itemprop="description">好记性不如烂笔头</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Hapi-js项目"><span class="nav-number">1.</span> <span class="nav-text">创建Hapi.js项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Mongoose-ODM与数据库进行交互"><span class="nav-number">2.</span> <span class="nav-text">使用Mongoose ODM与数据库进行交互</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老学</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+</body>
+</html>
