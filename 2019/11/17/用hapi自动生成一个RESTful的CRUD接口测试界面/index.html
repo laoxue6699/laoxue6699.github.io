@@ -55,17 +55,25 @@
   };
 </script>
 
-  <meta name="description" content="好记性不如烂笔头">
+  <meta name="description" content="前后端分离需要RESTful接口来交换数据，接口文档是连接前后端的桥梁。编写标准的接口文档、并随着项目需求的变更不断变更，这是后端开发的一个痛点。hapi-swagger模块的引入，帮我们解决了这个难题。只要在项目代码中同步进行配置，hapi-swagger插件就可以自动生成标准的API接口文档，hapi-swagger插件提供了一个UI界面，通过浏览器进行访问，非常便于测试API接口。 本文在作">
+<meta name="keywords" content="Nodejs,Hapi,MonggoDB,RESTful">
 <meta property="og:type" content="article">
 <meta property="og:title" content="用hapi自动生成一个RESTful的CRUD接口测试界面">
 <meta property="og:url" content="http://laoxue6699.github.io/2019/11/17/用hapi自动生成一个RESTful的CRUD接口测试界面/index.html">
 <meta property="og:site_name" content="老学的开发笔记">
-<meta property="og:description" content="好记性不如烂笔头">
+<meta property="og:description" content="前后端分离需要RESTful接口来交换数据，接口文档是连接前后端的桥梁。编写标准的接口文档、并随着项目需求的变更不断变更，这是后端开发的一个痛点。hapi-swagger模块的引入，帮我们解决了这个难题。只要在项目代码中同步进行配置，hapi-swagger插件就可以自动生成标准的API接口文档，hapi-swagger插件提供了一个UI界面，通过浏览器进行访问，非常便于测试API接口。 本文在作">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-17T04:19:06.276Z">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.49.19.png">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.49.35.png">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.49.48.png">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.50.04.png">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.50.25.png">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.50.38.png">
+<meta property="og:updated_time" content="2019-11-17T13:54:54.961Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用hapi自动生成一个RESTful的CRUD接口测试界面">
-<meta name="twitter:description" content="好记性不如烂笔头">
+<meta name="twitter:description" content="前后端分离需要RESTful接口来交换数据，接口文档是连接前后端的桥梁。编写标准的接口文档、并随着项目需求的变更不断变更，这是后端开发的一个痛点。hapi-swagger模块的引入，帮我们解决了这个难题。只要在项目代码中同步进行配置，hapi-swagger插件就可以自动生成标准的API接口文档，hapi-swagger插件提供了一个UI界面，通过浏览器进行访问，非常便于测试API接口。 本文在作">
+<meta name="twitter:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.49.19.png">
   <link rel="canonical" href="http://laoxue6699.github.io/2019/11/17/用hapi自动生成一个RESTful的CRUD接口测试界面/">
 
 
@@ -261,7 +269,24 @@
                 
               
 
-              <time title="创建时间：2019-11-17 12:19:06" itemprop="dateCreated datePublished" datetime="2019-11-17T12:19:06+08:00">2019-11-17</time>
+              <time title="创建时间：2019-11-17 12:19:06 / 修改时间：21:54:54" itemprop="dateCreated datePublished" datetime="2019-11-17T12:19:06+08:00">2019-11-17</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/原创/" itemprop="url" rel="index"><span itemprop="name">原创</span></a></span>
+
+                
+                
+              
             </span>
           
 
@@ -276,7 +301,45 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <p>前后端分离需要RESTful接口来交换数据，接口文档是连接前后端的桥梁。编写标准的接口文档、并随着项目需求的变更不断变更，这是后端开发的一个痛点。hapi-swagger模块的引入，帮我们解决了这个难题。只要在项目代码中同步进行配置，hapi-swagger插件就可以自动生成标准的API接口文档，hapi-swagger插件提供了一个UI界面，通过浏览器进行访问，非常便于测试API接口。</p>
+<p>本文在作者上篇文章《五分钟用hapi和mongoDB构建一个RESTful的CRUD接口API》的基础上，介绍如何引入配置hapi-swagger插件，根据代码自动生成API接口文档的测试界面。</p>
+<a id="more"></a>
+
+<h2 id="安装hapi-swagger插件"><a href="#安装hapi-swagger插件" class="headerlink" title="安装hapi-swagger插件"></a>安装<code>hapi-swagger</code>插件</h2><p><code>hapi-swagger</code>插件需要和<code>@hapi/inert</code>、<code>@hapi/vision</code>、<code>@hapi/joi</code>、<code>package</code>插件配合在一起使用。</p>
+<p>Joi 是一种验证模块，与 hapi 一样出自沃尔玛实验室团队。Joi 的 API 因其丰富的功能，使得验证数据结构与数值的合规，变得格外容易。</p>
+<p>通过以下命令安装上述插件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm i api-swagger @hapi/inert @hapi/vision @hapi/joi package</span><br></pre></td></tr></table></figure>
+
+<h2 id="引入插件"><a href="#引入插件" class="headerlink" title="引入插件"></a>引入插件</h2><p>在入口文件<code>index.js</code>中引入 <code>api-swagger @hapi/inert @hapi/vision</code> 插件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const Inert = require(&apos;@hapi/inert&apos;);</span><br><span class="line">const Vision = require(&apos;@hapi/vision&apos;);</span><br><span class="line">const HapiSwagger = require(&apos;hapi-swagger&apos;);</span><br><span class="line">const Pack = require(&apos;./package&apos;);</span><br></pre></td></tr></table></figure>
+
+<p>在<code>const init = async () =&gt; {}</code>函数中注册插件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">const swaggerOptions = &#123;</span><br><span class="line">    info: &#123;</span><br><span class="line">      title: &apos;Test API Documentation&apos;,</span><br><span class="line">      version: Pack.version,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  await server.register([</span><br><span class="line">    Inert,</span><br><span class="line">    Vision,</span><br><span class="line">    &#123;</span><br><span class="line">      plugin: HapiSwagger,</span><br><span class="line">      options: swaggerOptions</span><br><span class="line">    &#125;</span><br><span class="line">  ]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用插件"><a href="#使用插件" class="headerlink" title="使用插件"></a>使用插件</h2><p>在<code>/routes/posts.js</code>文件中进行配置。</p>
+<p>首先，需要引入<code>joi</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const Joi = require(&apos;@hapi/joi&apos;)</span><br></pre></td></tr></table></figure>
+
+<p>然后，对posts自定义路由插件进行配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line">exports.plugin = &#123;</span><br><span class="line">    name:&apos;routePosts&apos;,</span><br><span class="line">    version: &apos;1.0.0&apos;,</span><br><span class="line">    //pkg: require(&apos;../package.json&apos;),</span><br><span class="line">    register: async function (server, options) &#123;</span><br><span class="line"></span><br><span class="line">        server.route(&#123;</span><br><span class="line">            path: &apos;/posts&apos;,</span><br><span class="line">            method: &apos;GET&apos;,</span><br><span class="line">            options: &#123;</span><br><span class="line">                handler: PostsController.getAll,</span><br><span class="line">                description: &apos;get posts&apos;,</span><br><span class="line">                tags: [&apos;api&apos;]</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;);</span><br><span class="line">        server.route(&#123;</span><br><span class="line">            path: &apos;/posts/&#123;id&#125;&apos;,</span><br><span class="line">            method: &apos;GET&apos;,</span><br><span class="line"></span><br><span class="line">            options: &#123;</span><br><span class="line">                handler: PostsController.findById,</span><br><span class="line">                description: &apos;get post by id&apos;,</span><br><span class="line">                tags: [&apos;api&apos;],</span><br><span class="line">                validate: &#123;</span><br><span class="line">                    params: Joi.object(&#123;</span><br><span class="line">                        id: Joi.string()</span><br><span class="line">                            .required()</span><br><span class="line">                            .description(&apos;the id of the post&apos;)</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        server.route(&#123;</span><br><span class="line">            path: &apos;/posts&apos;,</span><br><span class="line">            method: &apos;POST&apos;,</span><br><span class="line"></span><br><span class="line">            options: &#123;</span><br><span class="line">                handler: PostsController.create,</span><br><span class="line">                description: &apos;create post&apos;,</span><br><span class="line">                tags: [&apos;api&apos;],</span><br><span class="line">                validate: &#123;</span><br><span class="line">                    payload: Joi.object(&#123;</span><br><span class="line">                        title: Joi.string()</span><br><span class="line">                            .required()</span><br><span class="line">                            .description(&apos;the post title&apos;),</span><br><span class="line">                        content: Joi.string()</span><br><span class="line">                            .description(&apos;the post content&apos;),</span><br><span class="line">                        rating: Joi.number()</span><br><span class="line">                            .description(&apos;the post rating&apos;),</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        server.route(&#123;</span><br><span class="line">            path: &apos;/posts/&#123;id&#125;&apos;,</span><br><span class="line">            method: &apos;PATCH&apos;,</span><br><span class="line">            </span><br><span class="line">            options: &#123;</span><br><span class="line">                handler: PostsController.edit,</span><br><span class="line">                description: &apos;get post by id&apos;,</span><br><span class="line">                tags: [&apos;api&apos;],</span><br><span class="line">                validate: &#123;</span><br><span class="line">                    params: Joi.object(&#123;</span><br><span class="line">                        id: Joi.string()</span><br><span class="line">                            .required()</span><br><span class="line">                            .description(&apos;the id of the post&apos;)</span><br><span class="line">                    &#125;),</span><br><span class="line">                    payload: Joi.object(&#123;</span><br><span class="line">                        title: Joi.string()</span><br><span class="line">                            .required()</span><br><span class="line">                            .description(&apos;the post title&apos;),</span><br><span class="line">                        content: Joi.string()</span><br><span class="line">                            .required()</span><br><span class="line">                            .description(&apos;the post content&apos;),</span><br><span class="line">                        rating: Joi.number()</span><br><span class="line">                            .required()</span><br><span class="line">                            .description(&apos;the post rating&apos;),</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        server.route(&#123;</span><br><span class="line">            path: &apos;/posts/&#123;id&#125;&apos;,</span><br><span class="line">            method: &apos;DELETE&apos;,</span><br><span class="line">            </span><br><span class="line">            options: &#123;</span><br><span class="line">                handler: PostsController.delete,</span><br><span class="line">                description: &apos;get post by id&apos;,</span><br><span class="line">                tags: [&apos;api&apos;],</span><br><span class="line">                validate: &#123;</span><br><span class="line">                    params: Joi.object(&#123;</span><br><span class="line">                        id: Joi.string()</span><br><span class="line">                            .required()</span><br><span class="line">                            .description(&apos;the id of the post&apos;)</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，在入口文件<code>index.js</code>中注册自定义路由插件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">await server.register([&#123;</span><br><span class="line">      plugin: require(&apos;./routes/posts&apos;),</span><br><span class="line">      options:&#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p>在终端窗口输入命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node .</span><br></pre></td></tr></table></figure>
+
+<p>项目成功启动后，提示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Listening on http://localhost:8000</span><br></pre></td></tr></table></figure>
+
+<p>在浏览器中输入<code>http://localhost:8000/documentation</code>即可通过接口文档界面进行测试。</p>
+<p><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.49.19.png" alt></p>
+<p><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.49.35.png" alt></p>
+<p><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.49.48.png" alt></p>
+<p><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.50.04.png" alt></p>
+<p><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.50.25.png" alt></p>
+<p><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-11-17%E4%B8%8B%E5%8D%889.50.38.png" alt></p>
+
     </div>
 
     
@@ -286,6 +349,21 @@
       
 
       <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Nodejs/" rel="tag"># Nodejs</a>
+            
+              <a href="/tags/Hapi/" rel="tag"># Hapi</a>
+            
+              <a href="/tags/MonggoDB/" rel="tag"># MonggoDB</a>
+            
+              <a href="/tags/RESTful/" rel="tag"># RESTful</a>
+            
+          </div>
+        
 
         
 
@@ -332,8 +410,17 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
 
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -425,6 +512,23 @@
 
         </div>
       </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装hapi-swagger插件"><span class="nav-number">1.</span> <span class="nav-text">安装hapi-swagger插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入插件"><span class="nav-number">2.</span> <span class="nav-text">引入插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用插件"><span class="nav-number">3.</span> <span class="nav-text">使用插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试"><span class="nav-number">4.</span> <span class="nav-text">测试</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
     </div>
   </aside>
