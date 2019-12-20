@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="generator" content="Hexo 3.9.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    save_scroll: false,
+    copycode: {"enable":false,"show_result":false,"style":null},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    }
+  };
+</script>
+
+  <meta name="description" content="本文介绍如何用Hapi构建一个简单的基于jwt的用户注册登录和验证的应用。 Hapi是一个开源的、基于Node.js的应用框架，它适用于构建应用程序和服务，其设计目标是让开发者把精力集中于开发可重用的应用程序的业务逻辑，向开发者提供构建应用程序业务逻辑所需的基础设施。">
+<meta name="keywords" content="Nodejs,Hapi.js,MongoDB,REST-API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hapi-js实现基于jwt的登录注册和验证">
+<meta property="og:url" content="http://laoxue6699.github.io/2019/12/20/Hapi-js实现基于jwt的登录注册和验证/index.html">
+<meta property="og:site_name" content="老学的开发笔记">
+<meta property="og:description" content="本文介绍如何用Hapi构建一个简单的基于jwt的用户注册登录和验证的应用。 Hapi是一个开源的、基于Node.js的应用框架，它适用于构建应用程序和服务，其设计目标是让开发者把精力集中于开发可重用的应用程序的业务逻辑，向开发者提供构建应用程序业务逻辑所需的基础设施。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.42.46.png">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.10.21.png">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.10.47.png">
+<meta property="og:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.11.51.png">
+<meta property="og:updated_time" content="2019-12-20T05:51:39.246Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hapi-js实现基于jwt的登录注册和验证">
+<meta name="twitter:description" content="本文介绍如何用Hapi构建一个简单的基于jwt的用户注册登录和验证的应用。 Hapi是一个开源的、基于Node.js的应用框架，它适用于构建应用程序和服务，其设计目标是让开发者把精力集中于开发可重用的应用程序的业务逻辑，向开发者提供构建应用程序业务逻辑所需的基础设施。">
+<meta name="twitter:image" content="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.42.46.png">
+  <link rel="canonical" href="http://laoxue6699.github.io/2019/12/20/Hapi-js实现基于jwt的登录注册和验证/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Hapi-js实现基于jwt的登录注册和验证 | 老学的开发笔记</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  <div class="container sidebar-position-left">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">老学的开发笔记</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">专注前端 兼顾全栈</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>笔记列表</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>按时间归档</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-categories">
+      
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>笔记分类</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>技术标签</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>自我介绍</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content page-post-detail">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://laoxue6699.github.io/2019/12/20/Hapi-js实现基于jwt的登录注册和验证/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="老学">
+      <meta itemprop="description" content="好记性不如烂笔头">
+      <meta itemprop="image" content="/images/laoxue.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="老学的开发笔记">
+    </span>
+      <header class="post-header">
+
+        
+          <h1 class="post-title" itemprop="name headline">Hapi-js实现基于jwt的登录注册和验证
+
+            
+          </h1>
+        
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-12-20 09:46:40 / 修改时间：13:51:39" itemprop="dateCreated datePublished" datetime="2019-12-20T09:46:40+08:00">2019-12-20</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/原创/" itemprop="url" rel="index"><span itemprop="name">原创</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文介绍如何用Hapi构建一个简单的基于jwt的用户注册登录和验证的应用。</p>
+<p>Hapi是一个开源的、基于Node.js的应用框架，它适用于构建应用程序和服务，其设计目标是让开发者把精力集中于开发可重用的应用程序的业务逻辑，向开发者提供构建应用程序业务逻辑所需的基础设施。</p>
+<a id="more"></a>
+
+<p>hapi 是由沃尔玛技术团队开发的 Web 框架，其优势在于：</p>
+<ul>
+<li>高性能 - hapi 的开发者遵守 Benchmark Driven Development</li>
+<li>安全性高，轻量级</li>
+<li>可扩展性</li>
+<li>内置缓存，Redis、 MongoDB、Memcached</li>
+<li>核心代码做 100% 测试</li>
+<li>内置端到端测试</li>
+<li>核心功能内置，其他特性以插件的形式展现: <a href="http://hapijs.com/plugins" target="_blank" rel="noopener">http://hapijs.com/plugins</a></li>
+</ul>
+<p>因此，即便是在黑色星期五这样的的抢购活动中，hapi 的表现也十分优异，我们也可以利用 hapi 高效的创建出一系列支持 RESTful 规范的接口。</p>
+<h2 id="一、创建项目"><a href="#一、创建项目" class="headerlink" title="一、创建项目"></a>一、创建项目</h2><ul>
+<li>项目结构</li>
+</ul>
+<img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.42.46.png" width="300px" alt="项目文件结构">
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">➜  hapi mkdir userLogin</span><br><span class="line">➜  hapi cd userLogin</span><br><span class="line">➜  userLogin npm init -y</span><br><span class="line">Wrote to /Users/huangyuhui/Desktop/hapi/userLogin/package.json:</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;userLogin&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;&quot;,</span><br><span class="line">  &quot;main&quot;: &quot;index.js&quot;,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;keywords&quot;: [],</span><br><span class="line">  &quot;author&quot;: &quot;&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="二、安装依赖"><a href="#二、安装依赖" class="headerlink" title="二、安装依赖"></a>二、安装依赖</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  userLogin npm install hapi mongoose nodemon jsonwebtoken bcrypt</span><br></pre></td></tr></table></figure>
+
+<h2 id="三、添加启动脚本"><a href="#三、添加启动脚本" class="headerlink" title="三、添加启动脚本"></a>三、添加启动脚本</h2><p>修改<code>packge.json</code>文件，在<code>&quot;scripts&quot;</code>对象中添加代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</span><br><span class="line">    &quot;start&quot;: &quot;nodemon server.js&quot;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<h2 id="四、创建用户模型"><a href="#四、创建用户模型" class="headerlink" title="四、创建用户模型"></a>四、创建用户模型</h2><ul>
+<li>在项目根目录创建<code>models</code>文件夹</li>
+<li>在<code>models</code>文件夹下创建<code>User.js</code>文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">const mongoose = require(&apos;mongoose&apos;)</span><br><span class="line">const Schema = mongoose.Schema</span><br><span class="line"></span><br><span class="line">// Create Schema</span><br><span class="line">const UserSchema = new Schema(&#123;</span><br><span class="line">  first_name: &#123;</span><br><span class="line">    type: String</span><br><span class="line">  &#125;,</span><br><span class="line">  last_name: &#123;</span><br><span class="line">    type: String</span><br><span class="line">  &#125;,</span><br><span class="line">  email: &#123;</span><br><span class="line">    type: String,</span><br><span class="line">    required: true</span><br><span class="line">  &#125;,</span><br><span class="line">  password: &#123;</span><br><span class="line">    type: String,</span><br><span class="line">    required: true</span><br><span class="line">  &#125;,</span><br><span class="line">  date: &#123;</span><br><span class="line">    type: Date,</span><br><span class="line">    default: Date.now</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">module.exports = User = mongoose.model(&apos;users&apos;, UserSchema)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="五、创建服务"><a href="#五、创建服务" class="headerlink" title="五、创建服务"></a>五、创建服务</h2><ul>
+<li>在项目根目录创建<code>server.js</code>文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">&apos;use strict&apos;</span><br><span class="line"></span><br><span class="line">const Hapi = require(&apos;hapi&apos;) //hapijs模块</span><br><span class="line">const mongoose = require(&apos;mongoose&apos;) //操作mongoDB数据库模块</span><br><span class="line"></span><br><span class="line">//创建服务器</span><br><span class="line">const server = new Hapi.Server(&#123;</span><br><span class="line">  host: &apos;localhost&apos;,</span><br><span class="line">  port: 5000,</span><br><span class="line">  //跨域设置</span><br><span class="line">  routes: &#123;</span><br><span class="line">    cors: true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">//连接本地mongoDB数据库</span><br><span class="line">server.app.db = mongoose.connect(</span><br><span class="line">  &apos;mongodb://localhost/mernloginreg&apos;, &#123;</span><br><span class="line">    useNewUrlParser: true,</span><br><span class="line">    useUnifiedTopology: true</span><br><span class="line">  &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">//定义服务启动函数</span><br><span class="line">const init = async () =&gt; &#123;</span><br><span class="line">  await server</span><br><span class="line">    //注册路由</span><br><span class="line">    .register(&#123;</span><br><span class="line">      plugin: require(&apos;./routes/Users&apos;)</span><br><span class="line">    &#125;, &#123;</span><br><span class="line">      routes: &#123;</span><br><span class="line">        //设置路由默认前缀</span><br><span class="line">        prefix: &apos;/users&apos;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    .catch(err =&gt; &#123;</span><br><span class="line">      console.log(err)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">  //启动服务</span><br><span class="line">  await server.start()</span><br><span class="line">  //提示服务启动信息</span><br><span class="line">  console.log(`Server running at: $&#123;server.info.uri&#125;`)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">init()</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="六、创建路由插件"><a href="#六、创建路由插件" class="headerlink" title="六、创建路由插件"></a>六、创建路由插件</h2><ul>
+<li>在项目根目录创建<code>routes</code>文件夹</li>
+<li>在<code>routes</code>文件夹下创建<code>Users.js</code>文件<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br></pre></td><td class="code"><pre><span class="line">&apos;use strict&apos;</span><br><span class="line">const jwt = require(&apos;jsonwebtoken&apos;) //token签发与验证模块</span><br><span class="line">const bcrypt = require(&apos;bcrypt&apos;) //字符串加密模块</span><br><span class="line">const User = require(&apos;../models/User&apos;) //导入用户模型</span><br><span class="line">const mongoose = require(&apos;mongoose&apos;) //操作mongoDB数据库模块</span><br><span class="line"></span><br><span class="line">process.env.SECRET_KEY = &apos;secret&apos; //设置密钥</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//自定义路由插件</span><br><span class="line">exports.plugin = &#123;</span><br><span class="line">  register: (server, options, next) =&gt; &#123;</span><br><span class="line">    //定义用户注册接口</span><br><span class="line">    server.route(&#123;</span><br><span class="line">        method: &apos;POST&apos;,</span><br><span class="line">        path: &apos;/register&apos;,</span><br><span class="line">        handler: (req, h) =&gt; &#123;</span><br><span class="line">          //设置注册时间</span><br><span class="line">          let today = new Date()</span><br><span class="line">          let m = today.getMinutes() - today.getTimezoneOffset()</span><br><span class="line">          today = today.setMinutes(m)</span><br><span class="line"></span><br><span class="line">          //从http请求中取出参数构建用户对象</span><br><span class="line">          const userData = &#123;</span><br><span class="line">            first_name: req.payload.first_name,</span><br><span class="line">            last_name: req.payload.last_name,</span><br><span class="line">            email: req.payload.email,</span><br><span class="line">            password: req.payload.password,</span><br><span class="line">            date: today</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          //查找数据库中是否有相同的email字段内容</span><br><span class="line">          return User.findOne(&#123;</span><br><span class="line">              email: req.payload.email</span><br><span class="line">            &#125;)</span><br><span class="line">            .then(user =&gt; &#123;</span><br><span class="line">              //如果没有找到，说明是新注册用户</span><br><span class="line">              if (!user) &#123;</span><br><span class="line">                //对客户端输入的密码明文进行加密</span><br><span class="line">                bcrypt.hash(req.payload.password, 10, (err, hash) =&gt; &#123;</span><br><span class="line">                  userData.password = hash</span><br><span class="line">                  //将注册用户信息写入数据库</span><br><span class="line">                  return User.create(userData)</span><br><span class="line">                    .then(user =&gt; &#123;</span><br><span class="line">                      //返回注册成功信息</span><br><span class="line">                      return &#123;</span><br><span class="line">                        status: user.email + &apos; Registered!&apos;</span><br><span class="line">                      &#125;</span><br><span class="line">                    &#125;)</span><br><span class="line">                    .catch(err =&gt; &#123;</span><br><span class="line">                      //返回错误信息</span><br><span class="line">                      return &apos;error: &apos; + err</span><br><span class="line">                    &#125;)</span><br><span class="line">                &#125;)</span><br><span class="line">                //返回用户注册内容</span><br><span class="line">                return userData</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                //如果数据库中有相同的email内容，返回用户已经存在，不再重复写入。</span><br><span class="line">                return &#123;</span><br><span class="line">                  error: &apos;User already exists&apos;</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .catch(err =&gt; &#123;</span><br><span class="line">              //错误信息提示</span><br><span class="line">              return &apos;error: &apos; + err</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;),</span><br><span class="line">      //定义用户登录接口</span><br><span class="line">      server.route(&#123;</span><br><span class="line">        method: &apos;POST&apos;,</span><br><span class="line">        path: &apos;/login&apos;,</span><br><span class="line">        handler: (req, h) =&gt; &#123;</span><br><span class="line">          //根据请求的email内容查找数据库记录</span><br><span class="line">          return User.findOne(&#123;</span><br><span class="line">              email: req.payload.email</span><br><span class="line">            &#125;)</span><br><span class="line">            .then(user =&gt; &#123;</span><br><span class="line">              if (user) &#123;</span><br><span class="line">                //如果存在请求的email内容，继续通过比较请求的密码值</span><br><span class="line">                if (bcrypt.compareSync(req.payload.password, user.password)) &#123;</span><br><span class="line">                  //如果请求的密码与数据库中记录的密码值相同</span><br><span class="line">                  //定义欲签发token的内容对象</span><br><span class="line">                  const payload = &#123;</span><br><span class="line">                    id: user._id,</span><br><span class="line">                    first_name: user.first_name,</span><br><span class="line">                    last_name: user.last_name,</span><br><span class="line">                    email: user.email</span><br><span class="line">                  &#125;</span><br><span class="line">                  //签发token</span><br><span class="line">                  let token = jwt.sign(payload, process.env.SECRET_KEY, &#123;</span><br><span class="line">                    //设置token有效期</span><br><span class="line">                    expiresIn: 1440</span><br><span class="line">                  &#125;)</span><br><span class="line">                  //返回token字符串的值</span><br><span class="line">                  return token</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                  //如果请求的用户密码不存在，返回用户不存在信息</span><br><span class="line">                  return &#123;</span><br><span class="line">                    error: &apos;User does not exist&apos;</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                //如果请求的用户email不存在，返回用户不存在信息</span><br><span class="line">                return &#123;</span><br><span class="line">                  error: &apos;User does not exist&apos;</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .catch(err =&gt; &#123;</span><br><span class="line">              return &#123;</span><br><span class="line">                error: err</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;),</span><br><span class="line"></span><br><span class="line">      //获取用户信息</span><br><span class="line">      server.route(&#123;</span><br><span class="line">        method: &apos;GET&apos;,</span><br><span class="line">        path: &apos;/profile&apos;,</span><br><span class="line">        handler: (req, h) =&gt; &#123;</span><br><span class="line">          //验证请求头中的token值，还原token内容对象</span><br><span class="line">          var decoded = jwt.verify(</span><br><span class="line">            req.headers.authorization,</span><br><span class="line">            process.env.SECRET_KEY</span><br><span class="line">          )</span><br><span class="line">          //根据token对象的id值查找数据库中的记录</span><br><span class="line">          return User.findOne(&#123;</span><br><span class="line">              _id: mongoose.Types.ObjectId(decoded.id)</span><br><span class="line">            &#125;)</span><br><span class="line">            .then(user =&gt; &#123;</span><br><span class="line">              console.log(user)</span><br><span class="line">              //找到则返回请求查找的用户信息，否则返回找不到用户信息</span><br><span class="line">              if (user) &#123;</span><br><span class="line">                return user</span><br><span class="line">              &#125; else &#123;</span><br><span class="line">                return &apos;User does not exist&apos;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;)</span><br><span class="line">            .catch(err =&gt; &#123;</span><br><span class="line">              return &apos;error: &apos; + err</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;,</span><br><span class="line">  name: &apos;users&apos; //自定义插件的名称</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="七、接口测试"><a href="#七、接口测试" class="headerlink" title="七、接口测试"></a>七、接口测试</h2><ul>
+<li><p>用户注册<br><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.10.21.png" alt></p>
+</li>
+<li><p>用户登录<br><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.10.47.png" alt></p>
+</li>
+<li><p>获取用户信息<br><img src="https://huangxiaoman.cn/%E6%88%AA%E5%B1%8F2019-12-2013.11.51.png" alt></p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Nodejs/" rel="tag"># Nodejs</a>
+            
+              <a href="/tags/Hapi-js/" rel="tag"># Hapi.js</a>
+            
+              <a href="/tags/MongoDB/" rel="tag"># MongoDB</a>
+            
+              <a href="/tags/REST-API/" rel="tag"># REST-API</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/16/用hapi自动生成一个RESTful的CRUD接口测试界面/" rel="next" title="用hapi自动生成一个RESTful的CRUD接口文档测试界面">
+                  <i class="fa fa-chevron-left"></i> 用hapi自动生成一个RESTful的CRUD接口文档测试界面
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/images/laoxue.png"
+      alt="老学">
+  <p class="site-author-name" itemprop="name">老学</p>
+  <div class="site-description motion-element" itemprop="description">好记性不如烂笔头</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+          
+            <a href="/categories/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">标签</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+        </div>
+      </div>
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、创建项目"><span class="nav-number">1.</span> <span class="nav-text">一、创建项目</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、安装依赖"><span class="nav-number">2.</span> <span class="nav-text">二、安装依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、添加启动脚本"><span class="nav-number">3.</span> <span class="nav-text">三、添加启动脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、创建用户模型"><span class="nav-number">4.</span> <span class="nav-text">四、创建用户模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、创建服务"><span class="nav-number">5.</span> <span class="nav-text">五、创建服务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、创建路由插件"><span class="nav-number">6.</span> <span class="nav-text">六、创建路由插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、接口测试"><span class="nav-number">7.</span> <span class="nav-text">七、接口测试</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">老学</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> v7.3.0</div>
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+      </div>
+
+    
+
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+<script src="/js/utils.js?v=7.3.0"></script>
+  <script src="/js/motion.js?v=7.3.0"></script>
+
+
+  <script src="/js/affix.js?v=7.3.0"></script>
+  <script src="/js/schemes/pisces.js?v=7.3.0"></script>
+
+
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+  
+  <script src="/js/scrollspy.js?v=7.3.0"></script>
+<script src="/js/post-details.js?v=7.3.0"></script>
+
+
+</body>
+</html>
